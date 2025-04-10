@@ -1,44 +1,35 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.demo.enums.Classe;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Personagem {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
     private String nomeAventureiro;
-    private String classeAventureiro;
-    private int level;
-    private Itens items;
+    private Classe classe;
     private int forca;
     private int defesa;
+    private int level = 1;
 
-    public Personagem(String nome, String nomeAventureiro, String classeAventureiro, int level, Itens items, int forca, int defesa) {
-        this.nome = nome;
-        this.nomeAventureiro = nomeAventureiro;
-        this.classeAventureiro = classeAventureiro;
-        this.level = level;
-        this.items = items;
-        this.forca = forca;
-        this.defesa = defesa;
+    private List<ItemMagico> itensMagicos = new ArrayList<>();
+    private ItemMagico amuleto;
+
+    public int getForcaTotal() {
+        int bonus = itensMagicos.stream().mapToInt(ItemMagico::getForca).sum();
+        return forca + bonus;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getNome() {
-        return this.nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
+    public int getDefesaTotal() {
+        int bonus = itensMagicos.stream().mapToInt(ItemMagico::getDefesa).sum();
+        return defesa + bonus;
     }
 }
